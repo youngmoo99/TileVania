@@ -20121,7 +20121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62ccd3d88f4ffe84d97b464ce37da7d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runSpeed: 10
+  runSpeed: 5
   jumpSpeed: 25
 --- !u!114 &1361840969
 MonoBehaviour:
