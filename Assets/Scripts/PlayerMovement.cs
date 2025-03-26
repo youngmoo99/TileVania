@@ -19,6 +19,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float climbSpeed = 5f;
     [SerializeField] Vector2 deathKick = new Vector2(10f, 10f);
 
+    [SerializeField] GameObject bullet;
+    [SerializeField] Transform gun;
+
     float customGravityScale = 8.0f;
 
     bool isAlive = true;
@@ -41,7 +44,11 @@ public class PlayerMovement : MonoBehaviour
         ClimbLadder();
         Die();
     }
-
+    void OnFire(InputValue value)
+    {
+        if (!isAlive) {return;}
+        Instantiate(bullet,gun.position, transform.rotation);
+    }
     void OnMove(InputValue value)
     {   
         if (!isAlive) {return;}
