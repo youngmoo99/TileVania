@@ -17,16 +17,44 @@ public class LevelExit : MonoBehaviour
 
     IEnumerator LoadNextLevel()
     {
-        yield return new WaitForSecondsRealtime(levelLoadDelay); // 실제 시간으로 levelLoadDelay초 기다림
+        yield return new WaitForSecondsRealtime(levelLoadDelay);
+
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         int nextSceneIndex = currentSceneIndex + 1;
-        if (nextSceneIndex == SceneManager.sceneCountInBuildSettings) // 마지막 단계면 1단계로 변경
+
+        // 마지막 씬이라면 (씬 총 개수와 같다면)
+        if (nextSceneIndex == SceneManager.sceneCountInBuildSettings)
         {
-            nextSceneIndex = 0;
+            string resultSceneName = "GameClear"; // ← 네 결과 씬 이름으로 바꿔줘!
+            StartCoroutine(LoadResultSceneAndDestroySession(resultSceneName));
+        }
+        else
+        {
+            FindObjectOfType<ScenePersist>()?.ResetScenePersist();
+            SceneManager.LoadScene(nextSceneIndex);
+        }
+    }
+
+    IEnumerator LoadResultSceneAndDestroySession(string resultSceneName)
+    {
+        // 결과 씬 로드
+        SceneManager.LoadScene(resultSceneName);
+
+        // UIResult.cs의 Start()가 실행되도록 프레임 1번 대기
+        yield return null;
+
+        // GameSession 안전하게 파괴
+        if (GameSession.Instance != null)
+        {
+            Destroy(GameSession.Instance.gameObject);
         }
 
-        FindObjectOfType<ScenePersist>().ResetScenePersist();
-        SceneManager.LoadScene(nextSceneIndex); //다음 씬 이동
+        // ScenePersist도 함께 제거 (있다면)
+        ScenePersist persist = FindObjectOfType<ScenePersist>();
+        if (persist != null)
+        {
+            Destroy(persist.gameObject);
+        }
     }
     
 }

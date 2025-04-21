@@ -1,39 +1,55 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameSession : MonoBehaviour
 {
+    public static GameSession Instance { get; private set; }
+
     [SerializeField] int playersLives = 3;
     [SerializeField] int score = 0;
-    [SerializeField] TextMeshProUGUI livesText; //목숨 
-    [SerializeField] TextMeshProUGUI scoreText; //점수
+    [SerializeField] TextMeshProUGUI livesText;
+    [SerializeField] TextMeshProUGUI scoreText;
 
-    void Awake() 
+    void Awake()
     {
-        int numGameSessions = FindObjectsOfType<GameSession>().Length;
-        if (numGameSessions > 1) 
+        if (Instance != null && Instance != this)
         {
-            Destroy(gameObject);
+            Destroy(gameObject); // 중복 방지
         }
         else
         {
+            Instance = this;
             DontDestroyOnLoad(gameObject);
         }
     }
 
-    void Start()
+    void OnEnable()
     {
-        livesText.text = playersLives.ToString();    
-        scoreText.text = score.ToString();
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    void Update()
+    void OnDisable()
     {
-        scoreText.text = score.ToString();
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // 씬이 로드되면 UI 다시 찾아 연결
+        livesText = GameObject.FindWithTag("LivesText")?.GetComponent<TextMeshProUGUI>();
+        scoreText = GameObject.FindWithTag("ScoreText")?.GetComponent<TextMeshProUGUI>();
+        UpdateUI();
+    }
+
+    void UpdateUI()
+    {
+        if (livesText != null)
+            livesText.text = playersLives.ToString();
+
+        if (scoreText != null)
+            scoreText.text = score.ToString();
     }
 
     public void ProcessPlayerDeath()
@@ -42,30 +58,52 @@ public class GameSession : MonoBehaviour
         {
             TakeLife();
         }
-        else 
+        else
         {
-            RestGameSession();
+            RestGameSession(); // 게임 오버
         }
+    }
+
+    void TakeLife()
+    {
+        playersLives--;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        UpdateUI();
+    }
+
+    void RestGameSession()
+    {
+        StartCoroutine(GoToGameOverScene());
+    }
+
+    IEnumerator GoToGameOverScene()
+    {
+        SceneManager.LoadScene("GameOver"); // ← 결과 씬 이름 맞게 설정
+        yield return null; // 씬 로딩 이후 한 프레임 기다렸다가
+        Destroy(gameObject); // GameSession 제거
     }
 
     public void AddToScore(int pointsToAdd)
     {
         score += pointsToAdd;
-        scoreText.text = score.ToString();
+        if (scoreText != null)
+            scoreText.text = score.ToString();
     }
 
-    void TakeLife() //플레이어 목숨 감소 원래 진행중인 스테이지 진행
+    public int GetScore()
     {
-        playersLives--;
-        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(currentSceneIndex);
-        livesText.text = playersLives.ToString(); 
+        return score;
     }
 
-    void RestGameSession() // 첫번째 스테이지 진행
-    {   
-        FindObjectOfType<ScenePersist>().ResetScenePersist();
-        SceneManager.LoadScene(0); 
-        Destroy(gameObject);
+    public int GetLives()
+    {
+        return playersLives;
+    }
+
+    public void ResetSession()
+    {
+        playersLives = 3;
+        score = 0;
+        UpdateUI();
     }
 }
