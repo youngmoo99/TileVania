@@ -11,7 +11,7 @@ A classic 2D platformer built in Unity — avoid enemies and traps, climb ladder
   <a href="#screenshots">🖼️ 스크린샷</a>
 </p>
 <p>
-  <img alt="Unity" src="https://img.shields.io/badge/Unity-6.0-black?logo=unity"/>
+  <img alt="Unity" src="https://img.shields.io/badge/Unity-2021.3.45-black?logo=unity"/>
   <img alt="Platform" src="https://img.shields.io/badge/Platform-Windows%20%7C%20macOS-blue"/>
 </p>
 
@@ -20,7 +20,7 @@ A classic 2D platformer built in Unity — avoid enemies and traps, climb ladder
 ## TL;DR
 
 * **장르**: 2D Platformer / Action Adventure  
-* **엔진**: Unity 6.0  
+* **엔진**: Unity 2021.3.45  
 * **역할(Role)**: 기획 100%, 프로그래밍 100%  
 * **플레이 루프**: 이동 → 점프/사다리 → 코인 수집 → 적/함정 회피 → 출구 도달 → 다음 스테이지 진행
 
@@ -52,7 +52,7 @@ A classic 2D platformer built in Unity — avoid enemies and traps, climb ladder
 
 <h2 id="tech-stack">🧰 기술 스택 / Tech Stack</h2>
 
-**엔진**: Unity 6.0  
+**엔진**: Unity 2021.3.45
 **언어**: C#  
 **패키지/툴**: TextMeshPro, Rigidbody2D Physics, Tilemap, Animator, Input System, Git, VS Code
 
