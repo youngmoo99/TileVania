@@ -28,7 +28,7 @@ A classic 2D platformer built in Unity — avoid enemies and traps, climb ladder
 
 <h2 id="demo">🎮 플레이 영상</h2>
 
-▶️ **Gameplay Video**: 준비 중  
+▶️ **Gameplay Video**: [플레이 영상](https://youtu.be/RHQ7u1y1D_Q)
 
 > 점프와 사다리를 이용해 장애물을 회피하고, 적과의 접촉을 피하면서 스테이지를 완주하세요.  
 > 코인을 수집하면 점수가 오르고, 생명은 제한되어 있습니다.
