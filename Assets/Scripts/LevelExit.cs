@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class LevelExit : MonoBehaviour
 {   
-    [SerializeField] float levelLoadDelay = 1f;
+    [SerializeField] float levelLoadDelay = 1f; // 다음 씬 로드 전 대기 시간
     void OnTriggerEnter2D(Collider2D other)
     {   
         if(other.tag == "Player")
@@ -25,16 +25,18 @@ public class LevelExit : MonoBehaviour
         // 마지막 씬이라면 (씬 총 개수와 같다면)
         if (nextSceneIndex == SceneManager.sceneCountInBuildSettings)
         {
-            string resultSceneName = "GameClear"; // ← 네 결과 씬 이름으로 바꿔줘!
+            string resultSceneName = "GameClear"; // ← 결과 씬
             StartCoroutine(LoadResultSceneAndDestroySession(resultSceneName));
         }
         else
-        {
+        {   
+            // 스테이지 단위로 유지되는 오브젝트 초기화(ScenePersist)
             FindObjectOfType<ScenePersist>()?.ResetScenePersist();
             SceneManager.LoadScene(nextSceneIndex);
         }
     }
 
+    // 결과 씬 로드 후, 세션/퍼시스트 오브젝트 정리
     IEnumerator LoadResultSceneAndDestroySession(string resultSceneName)
     {
         // 결과 씬 로드

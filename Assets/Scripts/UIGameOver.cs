@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class UIGameOver : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI scoreReusltText;
+    [SerializeField] TextMeshProUGUI scoreReusltText; // 결과 점수 표시
  
 
     void Start()
@@ -18,6 +18,7 @@ public class UIGameOver : MonoBehaviour
         }
     }
 
+    // 재시작 버튼: 세션/퍼시스트 정리 후 첫 스테이지로
     public void OnClickRestartGame()
     {
         // GameSession 삭제
@@ -36,6 +37,7 @@ public class UIGameOver : MonoBehaviour
         SceneManager.LoadScene("Level 1"); // 다시 첫 스테이지로
     }
 
+    // 메인 메뉴 버튼: 세션/퍼시스트 정리 후 메인 메뉴로
     public void OnClickMainMenu()
     {
         if (GameSession.Instance != null)

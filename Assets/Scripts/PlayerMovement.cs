@@ -14,17 +14,17 @@ public class PlayerMovement : MonoBehaviour
     BoxCollider2D myFeetCollider;
 
     SpriteRenderer mySpriteRender;
-    [SerializeField] float runSpeed = 5f;
-    [SerializeField] float jumpSpeed = 5f;
-    [SerializeField] float climbSpeed = 5f;
-    [SerializeField] Vector2 deathKick = new Vector2(10f, 10f);
+    [SerializeField] float runSpeed = 5f; // 좌우 이동 속도
+    [SerializeField] float jumpSpeed = 5f; // 점프 초기 속도
+    [SerializeField] float climbSpeed = 5f; // 사다리 등반 속도
+    [SerializeField] Vector2 deathKick = new Vector2(10f, 10f); // 사망 시 반동
 
-    [SerializeField] GameObject bullet;
-    [SerializeField] Transform gun;
+    [SerializeField] GameObject bullet; // 발사체 프리펩
+    [SerializeField] Transform gun; // 총구 위치
 
-    float customGravityScale = 8.0f;
+    float customGravityScale = 8.0f; // 기본 중력 배수
 
-    bool isAlive = true;
+    bool isAlive = true; // 사망 상태 플래그
     void Start()
     {
         myRigidbody = GetComponent<Rigidbody2D>();
@@ -32,6 +32,8 @@ public class PlayerMovement : MonoBehaviour
         myBodyCollider = GetComponent<CapsuleCollider2D>();
         myFeetCollider = GetComponent<BoxCollider2D>();
         mySpriteRender = GetComponent<SpriteRenderer>();
+
+        // 프로젝트 기본 중력 대신 캐릭터 전용 중력 사용
         myRigidbody.gravityScale = customGravityScale;
     }
 
@@ -42,35 +44,45 @@ public class PlayerMovement : MonoBehaviour
         Run();
         FlipSprite();
         ClimbLadder();
-        Die();
+        Die(); // 적/함정 접촉 체크
     }
+
+    // Input System: Fire 액션
     void OnFire(InputValue value)
     {
         if (!isAlive) {return;}
         Instantiate(bullet,gun.position, transform.rotation);
     }
+
+    // Input System: Move 액션 (Vector2)
     void OnMove(InputValue value)
     {   
         if (!isAlive) {return;}
         moveInput = value.Get<Vector2>();
-        Debug.Log(moveInput);
     }
 
+    // Input System: Jump 액션(누를 때 1회 처리)
     void OnJump(InputValue value)
     {   
         if (!isAlive) {return;}
-        if(value.isPressed && myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
+
+        // 발이 Ground 레이어에 닿아있을 때만 점프 허용
+        if (value.isPressed && myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
         {
             //do stuff 
-            myRigidbody.velocity += new Vector2 (0f, jumpSpeed);
+            myRigidbody.velocity += new Vector2(0f, jumpSpeed);
         }
 
     }
 
-    void Run() //캐릭터 움직이기
+    /// <summary>
+    /// 좌우 이동 및 달리기 애니메이션 제어
+    /// </summary>
+    void Run() 
     {   
         Vector2 playerVelocity = new Vector2 (moveInput.x * runSpeed, myRigidbody.velocity.y);
         myRigidbody.velocity = playerVelocity; 
+
         bool playerHasHorizontalSpeed = Mathf.Abs(myRigidbody.velocity.x) > Mathf.Epsilon; 
         if (playerHasHorizontalSpeed)
         {
@@ -83,6 +95,10 @@ public class PlayerMovement : MonoBehaviour
 
 
     }
+
+    /// <summary>
+    /// 이동 방향에 따라 스프라이트 좌우 반전
+    /// </summary>
     void FlipSprite() // 캐릭터 좌우 조절
     {   
         bool playerHasHorizontalSpeed = Mathf.Abs(myRigidbody.velocity.x) > Mathf.Epsilon; 
@@ -92,6 +108,9 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 사다리 레이어에 접촉 시 중력 0으로 등반 상태 전환
+    /// </summary>
     void ClimbLadder() 
     {   
         if(myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Climbing")))
@@ -111,14 +130,17 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// 적/함정 레이어 접촉 시 사망 처리 + GameSession에 알림
+    /// </summary>
     void Die()
     {   
         if(myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemies", "Hazards"))) 
         {
             isAlive = false;
             myAnimator.SetTrigger("Dying");
-            myRigidbody.velocity  = deathKick;
-            mySpriteRender.color = Color.red;
+            myRigidbody.velocity  = deathKick; // 살짝 튀는 연출
+            mySpriteRender.color = Color.red; // 피격 효과
             FindObjectOfType<GameSession>().ProcessPlayerDeath();
         }
        

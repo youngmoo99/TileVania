@@ -6,8 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class UIResult : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI scoreReusltText;
-    [SerializeField] TextMeshProUGUI livesResultText;
+    [SerializeField] TextMeshProUGUI scoreReusltText; // 최종 점수
+    [SerializeField] TextMeshProUGUI livesResultText; // 남은 목숨
 
     void Start()
     {
@@ -19,6 +19,7 @@ public class UIResult : MonoBehaviour
         }
     }
 
+    // 재시작 버튼
     public void OnClickRestartGame()
     {
         // GameSession 삭제
@@ -37,6 +38,7 @@ public class UIResult : MonoBehaviour
         SceneManager.LoadScene("Level 1"); // 다시 첫 스테이지로
     }
 
+    // 메인 메뉴 버튼
     public void OnClickMainMenu()
     {
         if (GameSession.Instance != null)
