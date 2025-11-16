@@ -143,7 +143,7 @@ Packages 자동 복구 후, Assets/Scenes/Demo.unity 실행
 
 ---
 
-<h2 id="screenshots">🖼️ 스크린샷 / Screenshots</h2> <p align="center"> <img src="Royal Run Main.png" width="720" alt="Royal Run Gameplay"/> <img src="Royal Run Main2.png" width="720" alt="Royal Run Gameplay"/> </p>
+<h2 id="screenshots">🖼️ 스크린샷 / Screenshots</h2> <p align="center"> <img src="TileVania GamePlay.png" width="720" alt="Tile Vania Gameplay"/></p>
 
 적을 피하고 코인을 모으며 사다리를 오르고 점프해 스테이지를 탈출하세요.
 클래식 감성과 현대적인 입력 시스템이 결합된 Unity 2D 플랫포머입니다.
